@@ -1,29 +1,35 @@
-var floorscount=10;
-var liftscount=5;
-
+var floorscount;
+var liftscount;
+var liftCalledQueue=[];
+var liftsFree=undefined;
+var liftsCurrentPosition=[];
 const btn=document.querySelector("#submit")
-// const formContainer=document.querySelector("#form-container")
-// btn.addEventListener("click",getFormDetails)
-// btn.addEventListener("click",generateLiftsFloorsUI)
-// function getFormDetails(e){
-//     e.preventDefault()
-//     floorscount=document.querySelector("#floorscount").value;
-//     liftscount=document.querySelector("#liftscount").value;
-//     next_step()
-// }
-// generateLiftsFloorsUI()
+const formContainer=document.querySelector("#form-container")
+btn.addEventListener("click",getFormDetails)
+function getFormDetails(e){
+    e.preventDefault()
+    floorscount=document.querySelector("#floorscount").value;
+    liftscount=document.querySelector("#liftscount").value;
+    console.log("f,l",floorscount,liftscount);
+    next_step()
+}
 function next_step(){
     formContainer.style.display="none"
+    liftCalledQueue=new Array()
+    console.log(liftscount);
+    liftsFree=new Array(parseInt(liftscount))
+    console.log(liftsFree);
+    liftsFree.fill(true)
+    console.log(liftsFree);
+    liftsCurrentPosition=new Array(parseInt(liftscount))
+    liftsCurrentPosition.fill(0)
+    console.log(liftsCurrentPosition);
     generateLiftsFloorsUI()
 }
 var floors=document.querySelector(".floors")
 console.log(floors);
-generateLiftsFloorsUI()
-var liftCalledQueue=new Array()
-var liftsFree=new Array(liftscount)
-var liftsCurrentPosition=new Array(liftscount)
-liftsCurrentPosition.fill(0)
-liftsFree.fill(true)
+// generateLiftsFloorsUI()
+
 function generateLiftsFloorsUI(){
     if(floorscount!=0 || liftscount!=0)
     {
@@ -94,7 +100,7 @@ function lift(e){
     calledFloor=e.target.classList[0].split("-")[1]
     liftCalledQueue.push(calledFloor)
     console.log(liftCalledQueue);
-    moveLift(liftCalledQueue.shift())
+    checkAvailability()
 
 }
 
@@ -107,6 +113,7 @@ async function moveLift(floorPosition){
     var transitionTimer= Math.abs(liftCurrentPosition-floorPosition)*1
     // console.log("t",transitionTimer);
     // console.log("ooo",liftCurrentPosition,floorPosition);
+    liftsFree[nearestLift-1]=false
     var distance=await liftCurrentPosition*100+(floorPosition-liftCurrentPosition)*100
     var liftToMove=document.querySelector(`.lift-${nearestLift}`)
     liftToMove.style.transitionDuration=`${transitionTimer}s`
@@ -126,7 +133,8 @@ function getNearestLift(floorPosition){
     console.log(liftsCurrentPosition);
     for(let i=0;i<liftscount;i++){
         console.log("i",i);
-        if(floorPosition-liftsCurrentPosition[i] < minPosition )
+        console.log(liftsFree[i]);
+        if(floorPosition-liftsCurrentPosition[i] < minPosition && liftsFree[i] )
         {
             liftNeedToMove=i
             minPosition=Math.abs(floorPosition-liftsCurrentPosition[i])
@@ -136,7 +144,25 @@ function getNearestLift(floorPosition){
     return liftNeedToMove+1
 }
 
+function checkAvailability() {
+    if (liftCalledQueue.length > 0 && liftsFree.includes(true)) {
+        moveLift(liftCalledQueue.shift())
+        checkAvailability();
+    } else {
+        let allbusy = setInterval(() => {
+        let liftavailable = liftsFree.includes(true);
+        if (liftavailable && liftCalledQueue.length > 0) {
+            moveLift(liftCalledQueue.shift())
+        }
+      }, 1000);
+      if (liftCalledQueue.length == 0) {
+        clearInterval(allbusy);
+      }
+    }
+  }
+
 function openDoors(lift){
+    console.log("lift",lift);
     var leftDoor=document.querySelector(`.leftdoor-${lift}`)
     var rightDoor=document.querySelector(`.rightdoor-${lift}`)
     console.log(leftDoor);
@@ -155,4 +181,7 @@ function openDoors(lift){
         rightDoor.style.transitionDuration="2.5s"
         rightDoor.style.transform="translateX(0px)"
     },2500)
+    setTimeout(()=>{
+        liftsFree[lift-1]=true;
+    },5000)
 }
