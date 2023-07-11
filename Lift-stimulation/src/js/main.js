@@ -37,11 +37,17 @@ function generateLiftsFloorsUI(){
             console.log(i);
             const floor = document.createElement("div");
             floor.classList.add("floor-container");
-            const floorNumber=document.createElement("span");
+            const floorBtns=document.createElement("div")
+            floorBtns.classList.add("floorBtns")
+            floor.appendChild(floorBtns)
+            const floorNumber=document.createElement("div");
             floorNumber.innerHTML=`${i} floor`;
             floorNumber.classList.add("floor-number");
-            floor.appendChild(floorNumber);
+            floorBtns.appendChild(floorNumber);
             floors.appendChild(floor);
+            const btns=document.createElement("div")
+            btns.classList.add("btns")
+            floorBtns.appendChild(btns)
             const upbtn=document.createElement("button");
             upbtn.innerHTML="up";
             upbtn.classList.add(`upbtn-${i}`);
@@ -56,9 +62,9 @@ function generateLiftsFloorsUI(){
             downbtn.addEventListener("click",lift)
 
             if(i!=floorscount)
-                floor.appendChild(upbtn);
+                btns.appendChild(upbtn);
             if(i!=0)
-                floor.appendChild(downbtn);
+                btns.appendChild(downbtn);
             floor.style.width="100%"
             floor.style.height="100px"
             // upbtn.addEventListener("click",callLift)
@@ -110,7 +116,7 @@ async function moveLift(floorPosition){
     // console.log("nearest",nearestLift,"flooe",floorPosition);
     // console.log(typeof(floorPosition));
     // console.log(typeof(liftCurrentPosition));
-    var transitionTimer= Math.abs(liftCurrentPosition-floorPosition)*1
+    var transitionTimer= Math.abs(liftCurrentPosition-floorPosition)*2
     // console.log("t",transitionTimer);
     // console.log("ooo",liftCurrentPosition,floorPosition);
     liftsFree[nearestLift-1]=false
