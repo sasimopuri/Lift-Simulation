@@ -10,7 +10,7 @@ var screenSize;
 var generate=document.querySelector("#generate")
 generate.addEventListener("click",generateNew)  
 function generateNew(){
-    this.location.reload()
+    location.reload()
 }
 window.onload = ()=>{
     screenSize=screen.width;
@@ -33,7 +33,7 @@ window.onload = ()=>{
         // formInputLift.style.width="30%"
         // formInputLift.style.height="30px"
     }
-    if(screenSize>1000 && screenSize<1800){
+    if(screenSize>1000 && screenSize<1400){
         formInputLift.placeholder="Max 6 lifts"
         formInputFloor.placeholder="Max 12 floors"
     }
@@ -43,7 +43,7 @@ window.onload = ()=>{
 window.addEventListener('resize', function(event) {
     var changeInWidth=event.currentTarget.innerWidth;
     console.log(screenSize,changeInWidth);
-    if(screenSize<500 & changeInWidth>500 || screenSize>500 && changeInWidth<500 || screenSize<1000 && changeInWidth>1000 || screenSize>1000 && changeInWidth<1000){
+    if(screenSize<500 & changeInWidth>500 || screenSize>500 && changeInWidth<500 || screenSize<1000 && changeInWidth>1000 || screenSize>1000 && changeInWidth<1000 || screenSize<1400 && changeInWidth>1400 || screenSize>1400 && changeInWidth<1400){
         this.location.reload()
     }
 })
@@ -73,7 +73,7 @@ function getFormDetails(e){
             next_step()
         }
     }
-    else if(screenSize>1000 && screenSize<1800){
+    else if(screenSize>1000 && screenSize<1400){
         if(floorscount>12 || liftscount>6){
             alert("Max floors should be <= 12 and max lifts <= 6")
         }

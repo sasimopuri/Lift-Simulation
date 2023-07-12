@@ -103,6 +103,11 @@
 }
 .up:active,.down:active{
     transform: scale(0.9);
+    
+}
+
+.down:active{
+    transform: rotate(180deg);
 }
 
 .down{
@@ -121,4 +126,10 @@
     gap: 10px;
     /* z-index: 9999; */
     /* border: 1px solid red; */
+}
+
+#generate{
+    padding: 5px;
+    border-radius: 6px;
+    background-color: antiquewhite;
 }
