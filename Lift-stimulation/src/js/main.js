@@ -6,12 +6,64 @@ var liftsCurrentPosition=[];
 const btn=document.querySelector("#submit")
 const formContainer=document.querySelector("#form-container")
 btn.addEventListener("click",getFormDetails)
+var screenSize;
+window.onload = ()=>{
+    screenSize=screen.width;
+    console.log(screenSize);
+    var formInputLift=document.querySelector("#liftscount");
+    var formInputFloor=document.querySelector("#floorscount");
+    var formContainer=document.querySelector("#form-container")
+    if(screenSize<500){
+        formInputLift.placeholder="Max 2 lifts"
+        formInputFloor.placeholder="Max 5 floors"
+    }
+    if(screenSize>500 && screenSize<1000){
+        formInputLift.placeholder="Max 3 lifts"
+        formInputFloor.placeholder="Max 5 floors"
+        // formContainer.style.minWidth="600px"
+        // formContainer.style.minHeight="400px"
+        // formContainer.style.fontSize="26px"
+        // formInputFloor.style.width="30%"
+        // formInputFloor.style.height="30px"
+        // formInputLift.style.width="30%"
+        // formInputLift.style.height="30px"
+    }
+}
+
+
+window.addEventListener('resize', function(event) {
+    var changeInWidth=event.currentTarget.innerWidth;
+    console.log(screenSize,changeInWidth);
+    if(screenSize<500 & changeInWidth>500 || screenSize>500 && changeInWidth<500){
+        this.location.reload()
+    }
+})
+
 function getFormDetails(e){
     e.preventDefault()
     floorscount=document.querySelector("#floorscount").value;
     liftscount=document.querySelector("#liftscount").value;
     console.log("f,l",floorscount,liftscount);
-    next_step()
+    if(screenSize<500){
+        if(floorscount>5 || liftscount>2){
+            alert("Max floors should be less than 5 and max lifts should be less than 3")
+        }
+        else{
+            next_step()
+        }
+    }
+    else if(screenSize<1000 && screenSize>500){
+        if(floorscount>5 || liftscount>3){
+            alert("Max floors should be less than 5 and max lifts should be less than 3")
+        }
+        else{
+            next_step()
+        }
+    }
+    else{
+        next_step()
+    }
+    
 }
 function next_step(){
     formContainer.style.display="none"
@@ -172,11 +224,11 @@ function openDoors(lift){
     var leftDoor=document.querySelector(`.leftdoor-${lift}`)
     var rightDoor=document.querySelector(`.rightdoor-${lift}`)
     console.log(leftDoor);
-    leftDoor.style.backgroundColor="#fff"
+    leftDoor.style.backgroundColor="gray"
     leftDoor.style.transitionDuration="2.5s"
     leftDoor.style.transform="translateX(-50px)"
 
-    rightDoor.style.backgroundColor="#fff"
+    rightDoor.style.backgroundColor="gray"
     rightDoor.style.transitionDuration="2.5s"
     rightDoor.style.transform="translateX(50px)"
     setTimeout(()=>{
