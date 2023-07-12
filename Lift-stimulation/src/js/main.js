@@ -7,6 +7,11 @@ const btn=document.querySelector("#submit")
 const formContainer=document.querySelector("#form-container")
 btn.addEventListener("click",getFormDetails)
 var screenSize;
+var generate=document.querySelector("#generate")
+generate.addEventListener("click",generateNew)  
+function generateNew(){
+    this.location.reload()
+}
 window.onload = ()=>{
     screenSize=screen.width;
     console.log(screenSize);
@@ -28,13 +33,17 @@ window.onload = ()=>{
         // formInputLift.style.width="30%"
         // formInputLift.style.height="30px"
     }
+    if(screenSize>1000 && screenSize<1800){
+        formInputLift.placeholder="Max 6 lifts"
+        formInputFloor.placeholder="Max 12 floors"
+    }
 }
 
 
 window.addEventListener('resize', function(event) {
     var changeInWidth=event.currentTarget.innerWidth;
     console.log(screenSize,changeInWidth);
-    if(screenSize<500 & changeInWidth>500 || screenSize>500 && changeInWidth<500){
+    if(screenSize<500 & changeInWidth>500 || screenSize>500 && changeInWidth<500 || screenSize<1000 && changeInWidth>1000 || screenSize>1000 && changeInWidth<1000){
         this.location.reload()
     }
 })
@@ -44,6 +53,10 @@ function getFormDetails(e){
     floorscount=document.querySelector("#floorscount").value;
     liftscount=document.querySelector("#liftscount").value;
     console.log("f,l",floorscount,liftscount);
+    if(floorscount==0 || liftscount==0){
+        alert("Min floors and lifts should be 1")
+        return
+    }
     if(screenSize<500){
         if(floorscount>5 || liftscount>2){
             alert("Max floors should be less than 5 and max lifts should be less than 3")
@@ -60,13 +73,33 @@ function getFormDetails(e){
             next_step()
         }
     }
+    else if(screenSize>1000 && screenSize<1800){
+        if(floorscount>12 || liftscount>6){
+            alert("Max floors should be <= 12 and max lifts <= 6")
+        }
+        else{
+            next_step()
+        }
+    }
     else{
-        next_step()
+        if(floorscount>15 || liftscount>12){
+            alert("Max floors 15 and max lifts 12")
+        }
+        else{
+            next_step()
+        }
     }
     
 }
 function next_step(){
     formContainer.style.display="none"
+    generate.style.display="flex"
+    var body=document.querySelector("body")
+    body.style.display="flex"
+    body.style.flexDirection="column"
+    body.style.alignItems="center"
+    body.style.justifyContent="center"
+    
     liftCalledQueue=new Array()
     console.log(liftscount);
     liftsFree=new Array(parseInt(liftscount))
@@ -101,12 +134,12 @@ function generateLiftsFloorsUI(){
             btns.classList.add("btns")
             floorBtns.appendChild(btns)
             const upbtn=document.createElement("button");
-            upbtn.innerHTML="up";
+            upbtn.innerHTML="^";
             upbtn.classList.add(`upbtn-${i}`);
             upbtn.classList.add("up");
 
             const downbtn=document.createElement("button");
-            downbtn.innerHTML="down";
+            downbtn.innerHTML="^";
             downbtn.classList.add(`downbtn-${i}`);
             downbtn.classList.add("down");
 

@@ -78,6 +78,7 @@
 .floors{
     display: flex;
     flex-direction: column;
+    width: 100%;
     /* gap:5px */
 }
 .floor-container{
@@ -96,10 +97,16 @@
     z-index: 99;
     border-radius: 6px;
     border: none;
+    /* padding: 5px; */
+    width: 30px;
     
 }
 .up:active,.down:active{
     transform: scale(0.9);
+}
+
+.down{
+    transform: rotate(180deg);
 }
 .btns{
     display: flex;
